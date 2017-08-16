@@ -10,6 +10,10 @@ module Devise
     module SessionLimitable
       extend ActiveSupport::Concern
 
+      def should_limit_sessions?
+        true
+      end
+
       def update_unique_session_id!(unique_session_id)
         self.unique_session_id = unique_session_id
 
