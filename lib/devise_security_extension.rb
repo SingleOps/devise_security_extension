@@ -75,6 +75,9 @@ module Devise
   # paranoid_verification will regenerate verifacation code after faild attempt
   mattr_accessor :paranoid_code_regenerate_after_attempt
   @@paranoid_code_regenerate_after_attempt = 10
+
+  mattr_accessor :skip_devise_session_limit
+  @@skip_devise_session_limit = false
 end
 
 # an security extension for devise
