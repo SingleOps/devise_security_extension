@@ -76,8 +76,8 @@ module Devise
   mattr_accessor :paranoid_code_regenerate_after_attempt
   @@paranoid_code_regenerate_after_attempt = 10
 
-  mattr_accessor :skip_devise_session_limit
-  @@skip_devise_session_limit = false
+  mattr_accessor :skip_session_limitable
+  @@skip_session_limitable = false
 end
 
 # an security extension for devise
