@@ -18,10 +18,16 @@ Warden::Manager.after_set_user :only => :fetch do |record, warden, options|
   env   = warden.request.env
 
   if record.respond_to?(:unique_session_id) && warden.authenticated?(scope) && options[:store] != false
-    if record.unique_session_id != warden.session(scope)['unique_session_id'] && record.respond_to?(:should_limit_sessions?) && record.should_limit_sessions? && !env['devise.skip_session_limitable'] && !Devise.skip_session_limitable
-      warden.raw_session.clear
-      warden.logout(scope)
-      throw :warden, :scope => scope, :message => :session_limited
+    if record.respond_to?(:should_limit_sessions?) && record.should_limit_sessions? && !env['devise.skip_session_limitable'] && !Devise.skip_session_limitable
+      if record.unique_session_id != warden.session(scope)['unique_session_id'] 
+        record.reload
+        # on a multi-instance environment, it's possible to have an out of date copy of record that doesn't have the up to date session ID, so force a reload
+        if record.unique_session_id != warden.session(scope)['unique_session_id'] 
+          warden.raw_session.clear
+          warden.logout(scope)
+          throw :warden, :scope => scope, :message => :session_limited
+        end
+      end
     end
   end
 end
